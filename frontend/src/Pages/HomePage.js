@@ -1,22 +1,24 @@
 import React, { useEffect } from 'react'
-import { Container, Box, Text, Tabs, TabList, Tab, TabPanels, TabPanel } from "@chakra-ui/react"
+import { Container, Box, Text, Tabs, TabList, Tab, TabPanels, TabPanel, Drawer, useDisclosure } from "@chakra-ui/react"
 import Login from '../components/Authentication/Login'
 import SignUp from '../components/Authentication/SignUp'
-import { Navigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 const HomePage = () => {
-
-  
+ 
+    const navigate = useNavigate()
     useEffect(() => {
         const userInfo = JSON.parse(localStorage.getItem('userInfo'));  
       
 
-        if (!userInfo) { 
-            Navigate("/")
-        }
+      if (userInfo) {
+        navigate("/chats")
+      } else { 
+        navigate("/")
+      }
       return () => {
       
       }
-    }, [Navigate])
+    }, [navigate])
 
 
 
@@ -51,6 +53,7 @@ const HomePage = () => {
         </TabPanels>
       </Tabs>
       </Box>
+    
 
     </Container>
   )
