@@ -1,6 +1,6 @@
 import { Button, FormControl, FormLabel, Input, InputGroup, InputRightElement, VStack } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import{useToast}from"@chakra-ui/react";
 import axios from 'axios';
 const Login = () => {
@@ -11,7 +11,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false)
     const toast = useToast()
-    const navigate = useNavigate();
+    const history = useHistory();
 
 
      const handleShowClicked = () => {
@@ -38,7 +38,7 @@ const Login = () => {
             }
             const { data } = await axios.post("/api/user/login", { email, password }, config)
             localStorage.setItem("userInfo", JSON.stringify(data));
-            navigate("/chats")
+            history.push("/chats")
         } catch (error) { 
             toast({
                 title: "Invalid credentials",

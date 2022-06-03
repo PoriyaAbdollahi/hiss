@@ -1,9 +1,9 @@
-import { Avatar, Drawer  , useToast ,useDisclosure ,Box, Button, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, Tooltip, DrawerOverlay, DrawerHeader, DrawerContent, DrawerBody, Input } from '@chakra-ui/react'
+import { Avatar, Drawer  , useToast ,useDisclosure ,Box, Button, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, Tooltip, DrawerOverlay, DrawerHeader, DrawerContent, DrawerBody, Input, Spinner } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { BellIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import { ChatState } from '../Context/ChatProvider'
 import ProfileModal from './ProfileModal'
-import { useNavigate } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import ChatLoading from '../ChatLoading'
 import axios from 'axios';
 import UserListItem from '../UserAvatar/UserListItem'
@@ -14,14 +14,14 @@ const SideDrawer = () => {
   const [loading, setLoading] = useState(false)
   const [loadingChat, setLoadingChat] = useState()
   const { user, setSelectedChat, chats, setChats } = ChatState()
-  const navigate = useNavigate()
+  const history = useHistory()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const firstField = React.useRef()
   const toast = useToast()
   
   const logOutHandler = () => {
     localStorage.removeItem('userInfo')
-    navigate("/")
+    history.push("/")
   }
 
   const handleSearch = async () => {
@@ -70,7 +70,9 @@ const SideDrawer = () => {
         }
       }
       const { data } = await axios.post("/api/chat", { userId }, config)
-      
+      if (!chats.find((c) => c._id === data._id)) { 
+        setChats([...chats, data])
+      }
       setSelectedChat(data)
       setLoadingChat(false)
     } catch (error) {
@@ -148,6 +150,7 @@ const SideDrawer = () => {
                 />
               ))
             )}
+            {loadingChat && <Spinner ml="auto" display="flex" />}
         </DrawerBody>
         </DrawerContent>
      

@@ -53,11 +53,11 @@ const fetchChats = asyncHandler(async (req, res) => {
             .populate("latestMessage")
             .sort({ updatedAt: -1 })
             .then(async (result) => { 
-                results = await User.populate(result, {
+                result = await User.populate(result, {
                     path: 'latestMessage.sender',
                     select: "name picture email"
                 })
-                res.status(200).send(results)
+                res.status(200).send(result)
 
             })
     } catch (error) { 
@@ -99,7 +99,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
 
 const renameGroup = asyncHandler(async (req, res) => { 
     const { chatId, chatName } = req.body;
-    const updatedChat = await Chat.findByIdAndUpdate(chatId, { chatName }, { new: true }
+    const updatedChat = await Chat.findByIdAndUpdate(chatId, { chatName : chatName }, { new: true }
     ).populate("users", "-password").populate("groupAdmin", "-password")
     if (!updatedChat) {
         return res.status(400).send("Chat not found")

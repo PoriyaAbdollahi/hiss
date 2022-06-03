@@ -1,6 +1,6 @@
 import { Box, Button, FormControl, FormLabel, Input, InputGroup, InputRightElement, StackDivider, VStack } from '@chakra-ui/react'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import{useToast}from"@chakra-ui/react";
 import axios from 'axios';
 const SignUp = () => {
@@ -12,7 +12,7 @@ const SignUp = () => {
     const [picture, setPicture] = useState();
     const [loading, setLoading] = useState(false);
     const toast = useToast()
-    const navigate = useNavigate();
+    const history = useHistory();
 
 
 
@@ -110,7 +110,7 @@ const SignUp = () => {
              })                     
                     setLoading(false)
                     setTimeout(() => {
-                         navigate("/chats")
+                         history.push("/chats")
                     }, 1000);
            
                 }).catch((err) => { 
