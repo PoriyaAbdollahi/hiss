@@ -17,7 +17,7 @@ var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
 
-    const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
+    const { selectedChat, setSelectedChat, user, chats, setChats , notification , setNotification} = ChatState();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [newMessage, setNewMessage] = useState();
@@ -51,7 +51,7 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
                     content: newMessage,
                     chatId : selectedChat._id
                 }, config)
-                console.log(data)
+                // console.log(data)
                
                 socket.emit("new message", data)
                 setMessages([...messages, data])
@@ -80,7 +80,7 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
             };
             setLoading(true)
             const { data } = await axios.get(`/api/message/${selectedChat._id}`, config)
-            console.log(data)
+            // console.log(data)
              setMessages(data)
             setLoading(false)
             socket.emit("join chat",selectedChat._id)
@@ -129,6 +129,7 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
         selectedChatCompare = selectedChat
     }, [selectedChat])
     
+  
    useEffect(() => {
        socket = io(ENTPOINT)
        socket.emit("setup", user)
@@ -141,7 +142,10 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
          socket.on('message Recieved', (newMessageRecieved) => { 
 
              if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
-                    // give notification
+                 if (!notification.includes(newMessageRecieved)) {
+                     setNotification([newMessageRecieved, ...notification])
+                     setfetchedAgain(!fetchAgain)
+                 }
              } else {
                    setMessages([...messages, newMessageRecieved])
               }
