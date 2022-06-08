@@ -9,6 +9,8 @@ import UpdateGroupChatModal from './miscellaneous/UpdateGroupChatModal';
 import ScrollableChat from './ScrollableChat';
 import './SingleChat.css'
 import io from 'socket.io-client';
+import Lottie from 'react-lottie';
+import animationData from '../animation/typing.json';
 
 const ENTPOINT = "http://localhost:5000"
 var socket, selectedChatCompare;
@@ -20,11 +22,24 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
     const [loading, setLoading] = useState(false);
     const [newMessage, setNewMessage] = useState();
     const [socketConnected, setSocketConntected] = useState(false);
+    const [typing, setTyping] = useState(false)
+    const [isTyping , setIsTyping] = useState(false)
     const toast = useToast()
+
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: animationData,
+        rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice'
+
+        }
+    }
+
 
     const sendMessage = async (event) => {
         if (event.key == "Enter" && newMessage) { 
-
+            socket.emit('stop typing', selectedChat._id)
             try {
                    const config = {
                       headers: {
@@ -88,6 +103,24 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
     const typingHandler = (e) => {
         setNewMessage(e.target.value)
         // typing Indicator Logic
+        if (!socketConnected) return
+        
+        if (!typing) { 
+            setTyping(true)
+            socket.emit("typing", selectedChat._id)
+        }
+
+        let lastTypingTime = new Date().getTime()
+        var timerLength = 3000
+      
+        setTimeout(() => {
+                var timeNow = new Date().getTime()
+            var timediff = timeNow - lastTypingTime
+            if (timediff >= timerLength && typing) { 
+                socket.emit("stop typing", selectedChat._id)
+                setTyping(false)
+            }
+        }, timerLength);
     }
     
     useEffect(() => {
@@ -99,7 +132,9 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
    useEffect(() => {
        socket = io(ENTPOINT)
        socket.emit("setup", user)
-       socket.on("connection", () => setSocketConntected(true))
+       socket.on("connected", () => setSocketConntected(true))
+       socket.on("typing", () => setIsTyping(true))
+       socket.on("stop typing", () => setIsTyping(false))
    }, [])
     
      useEffect(() => {
@@ -152,6 +187,15 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
               >
                   {loading ? (<Spinner size="xl" w={20} h={20} alignSelf="center" margin="auto" />) : (<div className='messages'>{<ScrollableChat messages={ messages } /> }</div>)} 
                   <FormControl onKeyDown={sendMessage}>
+                      {isTyping ?
+                          <div>
+                              <Lottie
+                                  options={defaultOptions}
+                                  width={70}
+                                  style={{marginBottom:15 , marginLeft:0}}
+                                  
+                              />
+                          </div> : <></>}
                       <Input
                           variant="filled"
                           bg="#E0E0E0"
