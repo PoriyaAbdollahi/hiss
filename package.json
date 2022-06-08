@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon backend/server.js",
-    "static":"node backend/server.js"
+    "static": "node backend/server.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.9",
-    "nodemon": "^2.0.16"
+    "nodemon": "^2.0.16",
+    "socket.io": "^4.5.1"
   }
 }

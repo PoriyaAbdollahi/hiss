@@ -8,6 +8,10 @@ import ProfileModal  from "./miscellaneous/ProfileModal"
 import UpdateGroupChatModal from './miscellaneous/UpdateGroupChatModal';
 import ScrollableChat from './ScrollableChat';
 import './SingleChat.css'
+import io from 'socket.io-client';
+
+const ENTPOINT = "http://localhost:5000"
+var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
 
@@ -15,6 +19,7 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [newMessage, setNewMessage] = useState();
+    const [socketConnected, setSocketConntected] = useState(false);
     const toast = useToast()
 
     const sendMessage = async (event) => {
@@ -33,6 +38,7 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
                 }, config)
                 console.log(data)
                
+                socket.emit("new message", data)
                 setMessages([...messages, data])
                 
 
@@ -61,7 +67,8 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
             const { data } = await axios.get(`/api/message/${selectedChat._id}`, config)
             console.log(data)
              setMessages(data)
-             setLoading(false)
+            setLoading(false)
+            socket.emit("join chat",selectedChat._id)
         } catch (error) { 
             toast({
                 title: "Error Occured",
@@ -85,10 +92,29 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
     
     useEffect(() => {
       fetchMessages()
-    
+        
+        selectedChatCompare = selectedChat
     }, [selectedChat])
     
+   useEffect(() => {
+       socket = io(ENTPOINT)
+       socket.emit("setup", user)
+       socket.on("connection", () => setSocketConntected(true))
+   }, [])
+    
+     useEffect(() => {
+         socket.on('message Recieved', (newMessageRecieved) => { 
 
+             if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
+                    // give notification
+             } else {
+                   setMessages([...messages, newMessageRecieved])
+              }
+        
+         })
+        
+    })
+   
   return (
       <>{selectedChat ? (
           <>
