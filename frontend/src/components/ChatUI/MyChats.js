@@ -4,17 +4,23 @@ import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { getSender } from "../../config/ChatLogics";
-import ChatLoading from "../ChatLoading";
-import GroupChatModal from "../miscellaneous/GroupChatModal";
+import ChatLoading from "./ChatLoading";
+import GroupChatModal from "./GroupChatModal";
 import { Button } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
 
 const MyChats = ({ fetchAgain }) => {
   const [loggedUser, setLoggedUser] = useState();
-
+  
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
 
   const toast = useToast();
+
+  useEffect(() => {
+    setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
+    fetchChats();
+    // eslint-disable-next-line
+  }, [fetchAgain]);
 
   const fetchChats = async () => {
     // console.log(user._id);
@@ -27,7 +33,8 @@ const MyChats = ({ fetchAgain }) => {
       };
 
       const { data } = await axios.get("/api/chat", config);
-      setChats(data);
+       setChats(data);
+     
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -40,11 +47,6 @@ const MyChats = ({ fetchAgain }) => {
     }
   };
 
-  useEffect(() => {
-    setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
-    fetchChats();
-    // eslint-disable-next-line
-  }, [fetchAgain]);
 
   return (
     <Box
@@ -88,9 +90,9 @@ const MyChats = ({ fetchAgain }) => {
         borderRadius="lg"
         overflowY="hidden"
       >
-        {chats ? (
+        {chats? (
           <Stack overflowY="scroll">
-            {chats.map((chat) => (
+            {  chats.map((chat) => (
               <Box
                 onClick={() => setSelectedChat(chat)}
                 cursor="pointer"
@@ -104,7 +106,7 @@ const MyChats = ({ fetchAgain }) => {
               >
                 <Text>
                   {!chat.isGroupChat
-                    ? getSender(loggedUser, chat.users)
+                    ?  getSender(loggedUser, chat.users)
                     : chat.chatName}
                 </Text>
                 {chat.latestMessage && (
@@ -116,7 +118,7 @@ const MyChats = ({ fetchAgain }) => {
                   </Text>
                 )}
               </Box>
-            ))}
+            )) }
           </Stack>
         ) : (
           <ChatLoading />

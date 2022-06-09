@@ -18,7 +18,7 @@ const Signup = () => {
   const [email, setEmail] = useState();
   const [confirmpassword, setConfirmpassword] = useState();
   const [password, setPassword] = useState();
-  const [pic, setPic] = useState();
+  const [picture, setPicture] = useState();
   const [picLoading, setPicLoading] = useState(false);
 
   const submitHandler = async () => {
@@ -56,7 +56,7 @@ const Signup = () => {
       });
       return;
     }
-    // console.log(name, email, password, pic);
+    // console.log(name, email, password, picture);
     try {
       const config = {
         headers: {
@@ -69,7 +69,7 @@ const Signup = () => {
           name,
           email,
           password,
-          pic,
+          picture,
         },
         config
       );
@@ -84,6 +84,7 @@ const Signup = () => {
       localStorage.setItem("userInfo", JSON.stringify(data));
       setPicLoading(false);
       history.push("/chats");
+       window.location.reload()
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -112,16 +113,16 @@ const Signup = () => {
     console.log(pics);
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
-      data.append("file", pics);
-      data.append("upload_preset", "chat-app");
-      data.append("cloud_name", "piyushproj");
-      fetch("https://api.cloudinary.com/v1_1/piyushproj/image/upload", {
+      data.append("file", pics)
+      data.append("upload_preset", "chatapp")
+      data.append("cloud_name", "defo7jvzc")
+      fetch("https://api.cloudinary.com/v1_1/defo7jvzc/image/upload/", {
         method: "post",
         body: data,
       })
         .then((res) => res.json())
         .then((data) => {
-          setPic(data.url.toString());
+          setPicture(data.url.toString());
           console.log(data.url.toString());
           setPicLoading(false);
         })
@@ -189,7 +190,7 @@ const Signup = () => {
           </InputRightElement>
         </InputGroup>
       </FormControl>
-      <FormControl id="pic">
+      <FormControl id="picture">
         <FormLabel>Upload your Picture</FormLabel>
         <Input
           type="file"

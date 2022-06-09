@@ -3,13 +3,13 @@ import { Box, Button, FormControl, IconButton, Input, Modal, ModalBody, ModalClo
 import axios from 'axios'
 import React, { useState } from 'react'
 import { ChatState } from '../Context/ChatProvider'
-import UserbadgeItem from '../UserAvatar/UserbadgeItem'
-import UserListItem from '../UserAvatar/UserListItem'
+import UserbadgeItem from '../UserUI/UserbadgeItem'
+import UserListItem from '../UserUI/UserListItem'
 
 const UpdateGroupChatModal = ({ fetchAgain , setfetchedAgain , fetchMessages }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState()
-    const [groupChatName, setgroupChatName] = useState()
+    const { selectedChat, setSelectedChat, user } = ChatState()
+    const [groupChatName, setgroupChatName] = useState("")
     const [search, setSearch] = useState("")
     const [searchResult, setSearchResult] = useState([])
     const [loading, setLoading] = useState(false)

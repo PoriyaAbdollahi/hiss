@@ -1,17 +1,17 @@
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { Box, ButtonSpinner, FormControl, IconButton, Input, Spinner, Text, useToast } from '@chakra-ui/react';
+import { Box,  FormControl, IconButton, Input, Spinner, Text, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { getSender , getSenderFull } from '../config/ChatLogics';
-import { ChatState } from './Context/ChatProvider';
-import ProfileModal  from "./miscellaneous/ProfileModal"
-import UpdateGroupChatModal from './miscellaneous/UpdateGroupChatModal';
+import { getSender , getSenderFull } from '../../config/ChatLogics';
+import { ChatState } from '../Context/ChatProvider';
+import ProfileModal  from "../UserUI/ProfileModal";
+import UpdateGroupChatModal from '../ChatUI/UpdateGroupChatModal';
 import ScrollableChat from './ScrollableChat';
 import './SingleChat.css'
 import io from 'socket.io-client';
 import Lottie from 'react-lottie';
-import typingPATH from '../animation/typing.json';
-import chatingPATH from '../animation/chat.json';
+import typingPATH from '../../animation/typing.json';
+import chatingPATH from '../../animation/chat.json';
 
 
 const ENTPOINT = "http://localhost:5000"
@@ -19,7 +19,7 @@ var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
 
-    const { selectedChat, setSelectedChat, user, chats, setChats , notification , setNotification} = ChatState();
+    const { selectedChat, setSelectedChat, user,  notification , setNotification} = ChatState();
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [newMessage, setNewMessage] = useState();
@@ -31,7 +31,7 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
     const typingAnimationConfig = {
         loop: true,
         autoplay: true,
-        animationData: typing,
+        animationData: typingPATH,
         rendererSettings: {
             preserveAspectRatio: 'xMidYMid slice'
         }
