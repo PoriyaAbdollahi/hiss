@@ -96,6 +96,7 @@ const MyChats = ({ fetchAgain }) => {
                 cursor="pointer"
                 bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
                 color={selectedChat === chat ? "white" : "black"}
+                 _hover={{ bg: "#38B2AC" , color: "white"}}
                 px={3}
                 py={2}
                 borderRadius="lg"

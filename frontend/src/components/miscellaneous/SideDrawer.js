@@ -88,7 +88,7 @@ const SideDrawer = () => {
   
   return (
     <>
-      <Box display="flex" justifyContent="space-between" alignItems="center" bg="white" w="100%" borderWidth="5px" p="5px 10px 5px 10px">
+      <Box bg="white" display="flex" justifyContent="space-between" alignItems="center" w="100%" borderWidth="2px" p="5px 10px 5px 10px" borderRadius="25px" marginTop={2}>
          <Tooltip label="Search Users To Chat" hasArrow placement='bottom'>
 
           <Button variant="ghost" onClick={ onOpen}>

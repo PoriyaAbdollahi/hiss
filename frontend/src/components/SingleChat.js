@@ -10,7 +10,9 @@ import ScrollableChat from './ScrollableChat';
 import './SingleChat.css'
 import io from 'socket.io-client';
 import Lottie from 'react-lottie';
-import animationData from '../animation/typing.json';
+import typingPATH from '../animation/typing.json';
+import chatingPATH from '../animation/chat.json';
+
 
 const ENTPOINT = "http://localhost:5000"
 var socket, selectedChatCompare;
@@ -26,15 +28,23 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
     const [isTyping , setIsTyping] = useState(false)
     const toast = useToast()
 
-    const defaultOptions = {
+    const typingAnimationConfig = {
         loop: true,
         autoplay: true,
-        animationData: animationData,
+        animationData: typing,
         rendererSettings: {
             preserveAspectRatio: 'xMidYMid slice'
-
         }
     }
+     const chatAnimationConfig = {
+        loop: true,
+        autoplay: true,
+        animationData: chatingPATH,
+        rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice'
+        }
+    }
+    
 
 
     const sendMessage = async (event) => {
@@ -194,7 +204,7 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
                       {isTyping ?
                           <div>
                               <Lottie
-                                  options={defaultOptions}
+                                  options={typingAnimationConfig}
                                   width={70}
                                   style={{marginBottom:15 , marginLeft:0}}
                                   
@@ -212,15 +222,31 @@ const SingleChat = ({ fetchAgain, setfetchedAgain }) => {
               </Box>
           </>
       ) : (
-          <Box
+              <Box
+                
               display="flex"
               alignItems="center"
               justifyContent="center"
+              flexDirection="column"
               h="100%"
-          >
+              >
+                  <Box
+                      width="100%"
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                  >
+                     <Lottie 
+                        width="500px"
+                        options={chatAnimationConfig}
+                        style={{marginBottom:15 , marginLeft:0}}
+                    />  
+                  </Box>
+                
               <Text  fontSize="3xl" pb={3} fontFamily="Work sans"
               >
-              Click On a User To start Conversation</Text>              
+                      Click On a User To start Conversation</Text>   
+                  
           </Box>
       )}</>
   )

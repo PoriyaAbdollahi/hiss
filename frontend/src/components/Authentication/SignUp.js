@@ -6,6 +6,7 @@ import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { useState } from "react";
 import { useHistory } from "react-router";
+import { ValidateEmail } from "../../config/Validation";
 
 const Signup = () => {
   const [show, setShow] = useState(false);
@@ -22,6 +23,17 @@ const Signup = () => {
 
   const submitHandler = async () => {
     setPicLoading(true);
+    if (!ValidateEmail(email)) {
+        toast({
+        title: "Please Enter a Valid Email",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+        });
+       setPicLoading(false);
+      return
+     }
     if (!name || !email || !password || !confirmpassword) {
       toast({
         title: "Please Fill all the Feilds",
@@ -33,6 +45,7 @@ const Signup = () => {
       setPicLoading(false);
       return;
     }
+   
     if (password !== confirmpassword) {
       toast({
         title: "Passwords Do Not Match",
@@ -43,7 +56,7 @@ const Signup = () => {
       });
       return;
     }
-    console.log(name, email, password, pic);
+    // console.log(name, email, password, pic);
     try {
       const config = {
         headers: {
